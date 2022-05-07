@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+
+import sys
+
+
+if len(sys.argv) < 3:
+    print("Usage: mem_convert binary text", file=sys.stderr)
+    exit(1)
+
+bin_file = open(sys.argv[1], "rb")
+mem_file = open(sys.argv[2], "w")
+
+def read_lines(file):
+    line = file.read(16)
+    while line:
+        yield line
+        line = file.read(16)
+
+    
+for line in read_lines(bin_file):
+    for byte in line:
+        print(f"{byte:02x} ", file=mem_file, end='')
+    print(file=mem_file)
