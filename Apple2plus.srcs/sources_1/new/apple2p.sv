@@ -28,6 +28,10 @@ module apple2p(
     input uart_recv
     );
 
-cpu8bit main_cpu();
+
+logic clock1mhz;
+clock_divider#(.Divider(50)) clock1mhz_divider(.clock_in(clock), .clock_out(clock1mhz));
+
+cpu8bit main_cpu(.phi2(clock1mhz));
 
 endmodule
