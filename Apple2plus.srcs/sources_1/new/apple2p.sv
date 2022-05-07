@@ -24,6 +24,7 @@ module apple2p(
     input clock,
     output power_led,
     output activity_led,
+    input reset_switch,
     output uart_send,
     input uart_recv
     );
