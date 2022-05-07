@@ -27,4 +27,7 @@ module apple2p(
     output uart_send,
     input uart_recv
     );
+
+cpu8bit main_cpu();
+
 endmodule
