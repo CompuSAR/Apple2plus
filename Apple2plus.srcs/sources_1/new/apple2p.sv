@@ -29,13 +29,25 @@ module apple2p(
     input uart_recv
     );
 
-
 logic clock1mhz;
 clock_divider#(.Divider(50)) clock1mhz_divider(.clock_in(clock), .clock_out(clock1mhz));
 
-cpu8bit main_cpu(.phi2(clock1mhz));
+logic [15:0]address_bus;
+logic [7:0]read_data;
+memory_map memory_map(.address(address_bus), .read_data(read_data));
+
+cpu8bit main_cpu(
+    .phi2(clock1mhz),
+    .data_in(read_data),
+    .RES(reset_switch),
+    .rdy(1),
+    .IRQ(1),
+    .NMI(1),
+    .SO(1),
+    .address(address_bus)
+);
 
 assign power_led = 0;
-assign activity_led = 1;
+assign activity_led = read_data[0];
 
 endmodule
