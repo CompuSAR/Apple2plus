@@ -35,4 +35,7 @@ clock_divider#(.Divider(50)) clock1mhz_divider(.clock_in(clock), .clock_out(cloc
 
 cpu8bit main_cpu(.phi2(clock1mhz));
 
+assign power_led = 0;
+assign activity_led = 1;
+
 endmodule
