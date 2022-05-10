@@ -22,58 +22,91 @@
 
 module memory_map(
     input [15:0]address,
+    input clock,
+    input [7:0]write_data,
+    input write,
 
     output logic[7:0] read_data
 );
 
 interface memory_read_i;
-    logic [10:0]address;
     logic enable;
     logic [7:0]data;
 endinterface
 
 memory_read_i cpu_memory_segments_read['h1f:0]();
 
+// Dual port RAM - $0000 - $0800
+segment_ram_dp ram00(
+    .addra (address[10 : 0]),
+    .clka  (clock),
+    .dina  (write_data),
+    .douta (cpu_memory_segments_read['h00].data),
+    .ena   (cpu_memory_segments_read['h00].enable),
+    .wea   (write),
+
+    .addrb(),
+    .clkb(clock),
+    .dinb(),
+    .doutb(),
+    .enb(0),
+    .web(0)
+);
+
+generate
+    genvar i;
+
+    for( i='h01; i<='h11; ++i ) begin
+        segment_ram_sp ram_segment(
+            .addra (address[10 : 0]),
+            .clka  (clock),
+            .dina  (write_data),
+            .douta (cpu_memory_segments_read[i].data),
+            .ena   (cpu_memory_segments_read[i].enable),
+            .wea   (write)
+        );
+    end
+
+endgenerate
+
 // Memory IO region $c000 - $cfff
 assign cpu_memory_segments_read['h18].data = 8'h00;
 assign cpu_memory_segments_read['h19].data = 8'h00;
 
 rom_segment#("rom-D0.mem") romD0(
-    .address (cpu_memory_segments_read['h1a].address),
+    .address (address[10 : 0]),
     .enable  (cpu_memory_segments_read['h1a].enable),
     .data    (cpu_memory_segments_read['h1a].data)
 );
 rom_segment#("rom-D8.mem") romD8(
-    .address (cpu_memory_segments_read['h1b].address),
+    .address (address[10 : 0]),
     .enable  (cpu_memory_segments_read['h1b].enable),
     .data    (cpu_memory_segments_read['h1b].data)
 );
 rom_segment#("rom-E0.mem") romE0(
-    .address (cpu_memory_segments_read['h1c].address),
+    .address (address[10 : 0]),
     .enable  (cpu_memory_segments_read['h1c].enable),
     .data    (cpu_memory_segments_read['h1c].data)
 );
 rom_segment#("rom-E8.mem") romE8(
-    .address (cpu_memory_segments_read['h1d].address),
+    .address (address[10 : 0]),
     .enable  (cpu_memory_segments_read['h1d].enable),
     .data    (cpu_memory_segments_read['h1d].data)
 );
 rom_segment#("rom-F0.mem") romF0(
-    .address (cpu_memory_segments_read['h1e].address),
+    .address (address[10 : 0]),
     .enable  (cpu_memory_segments_read['h1e].enable),
     .data    (cpu_memory_segments_read['h1e].data)
 );
 rom_segment#("rom-F8.mem") romF8(
-    .address (cpu_memory_segments_read['h1f].address),
+    .address (address[10 : 0]),
     .enable  (cpu_memory_segments_read['h1f].enable),
     .data    (cpu_memory_segments_read['h1f].data)
 );
 
 
 generate
-    genvar i;
     for( i=0; i<'h20; ++i ) begin
-        assign cpu_memory_segments_read[i].address = address[10:0];
         assign cpu_memory_segments_read[i].enable = address[15:11]==i;
     end
 endgenerate
