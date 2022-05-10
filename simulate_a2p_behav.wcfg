@@ -13,21 +13,51 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="8,045.001 ns"></ZoomEndTime>
-      <Cursor1Time time="3,990.000 ns"></Cursor1Time>
+      <ZoomStartTime time="1.558333 us"></ZoomStartTime>
+      <ZoomEndTime time="17.688334 us"></ZoomEndTime>
+      <Cursor1Time time="15.000000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="207"></NameColumnWidth>
+      <NameColumnWidth column_width="203"></NameColumnWidth>
       <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="2" />
-   <wvobject type="logic" fp_name="/simulate_a2p/board_clock">
-      <obj_property name="ElementShortName">board_clock</obj_property>
-      <obj_property name="ObjectShortName">board_clock</obj_property>
-   </wvobject>
+   <WVObjectSize size="9" />
    <wvobject type="logic" fp_name="/simulate_a2p/apple/main_cpu/phi2">
       <obj_property name="ElementShortName">phi2</obj_property>
       <obj_property name="ObjectShortName">phi2</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/address_bus">
+      <obj_property name="ElementShortName">address_bus[15:0]</obj_property>
+      <obj_property name="ObjectShortName">address_bus[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulate_a2p/apple/main_cpu/sync">
+      <obj_property name="ElementShortName">sync</obj_property>
+      <obj_property name="ObjectShortName">sync</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulate_a2p/apple/rW">
+      <obj_property name="ElementShortName">rW</obj_property>
+      <obj_property name="ObjectShortName">rW</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/read_data">
+      <obj_property name="ElementShortName">read_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/write_data">
+      <obj_property name="ElementShortName">write_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulate_a2p/apple/reset_switch">
+      <obj_property name="ElementShortName">reset_switch</obj_property>
+      <obj_property name="ObjectShortName">reset_switch</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/main_cpu/cpu/decoder/data_latch_low_source">
+      <obj_property name="ElementShortName">data_latch_low_source[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_latch_low_source[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/main_cpu/cpu/decoder/data_latch_high_source">
+      <obj_property name="ElementShortName">data_latch_high_source[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_latch_high_source[31:0]</obj_property>
    </wvobject>
 </wave_config>

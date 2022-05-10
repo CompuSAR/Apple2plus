@@ -28,14 +28,9 @@ module apple2p(
     output uart_send,
     input uart_recv,
 
-    output logic debug0,
-    output logic debug1,
-    output logic debug2,
-    output logic debug3,
-    output logic debug4,
-    output logic debug5,
-    output logic debug6,
-    output logic debug7
+    output logic [15:0]debug_addr,
+    output logic [7:0]debug_data,
+    output logic debug_clock
     );
 
 logic clock1mhz;
@@ -45,7 +40,7 @@ logic [15:0]address_bus;
 logic [7:0]read_data;
 logic [7:0]write_data;
 logic rW;
-memory_map memory_map(.address(address_bus), .clock(clock1mhz), .write_data(write_data), .write(! rW), .read_data(read_data));
+memory_map memory_map(.address(address_bus), .clock(!clock1mhz), .write_data(write_data), .write(! rW), .read_data(read_data));
 
 cpu8bit main_cpu(
     .phi2(clock1mhz),
@@ -63,13 +58,8 @@ cpu8bit main_cpu(
 assign power_led = 0;
 assign activity_led = read_data[0];
 
-assign debug0 = clock1mhz;
-assign debug1 = address_bus[0];
-assign debug2 = address_bus[1];
-assign debug3 = address_bus[2];
-assign debug4 = address_bus[3];
-assign debug5 = address_bus[4];
-assign debug6 = address_bus[5];
-assign debug7 = address_bus[6];
+assign debug_addr = address_bus;
+assign debug_data = rW ? read_data : write_data;
+assign debug_clock = clock1mhz;
 
 endmodule

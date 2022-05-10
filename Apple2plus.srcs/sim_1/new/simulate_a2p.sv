@@ -24,6 +24,7 @@ module simulate_a2p(
     );
 
 logic board_clock = 0;
+logic reset;
 
 initial begin
     forever begin
@@ -32,6 +33,13 @@ initial begin
     end
 end
 
-apple2p apple(.clock(board_clock));
+initial begin
+    reset = 0;
+    #7000 reset = 1;
+    #20000 reset = 0;
+    #4000 reset = 1;
+end
+
+apple2p apple(.clock(board_clock), .reset_switch(reset));
 
 endmodule
