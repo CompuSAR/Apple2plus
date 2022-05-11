@@ -45,9 +45,9 @@ segment_ram_dp ram00(
     .ena   (cpu_memory_segments_read['h00].enable),
     .wea   (write),
 
-    .addrb(),
+    .addrb(16'h0000),
     .clkb(clock),
-    .dinb(),
+    .dinb(8'h00),
     .doutb(),
     .enb(0),
     .web(0)

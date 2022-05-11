@@ -30,7 +30,8 @@ module apple2p(
 
     output logic [15:0]debug_addr,
     output logic [7:0]debug_data,
-    output logic debug_clock
+    output logic debug_clock,
+    output logic debug_rw
     );
 
 logic clock1mhz;
@@ -61,5 +62,6 @@ assign activity_led = read_data[0];
 assign debug_addr = address_bus;
 assign debug_data = rW ? read_data : write_data;
 assign debug_clock = clock1mhz;
+assign debug_rw = rW;
 
 endmodule
