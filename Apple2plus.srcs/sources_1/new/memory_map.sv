@@ -36,6 +36,7 @@ endinterface
 
 memory_read_i cpu_memory_segments_read['h1f:0]();
 
+/*
 // Dual port RAM - $0000 - $0800
 segment_ram_dp ram00(
     .addra (address[10 : 0]),
@@ -45,25 +46,26 @@ segment_ram_dp ram00(
     .ena   (cpu_memory_segments_read['h00].enable),
     .wea   (write),
 
-    .addrb(16'h0000),
+    .addrb(10'h000),
     .clkb(clock),
     .dinb(8'h00),
     .doutb(),
     .enb(0),
     .web(0)
 );
+*/
 
 generate
     genvar i;
 
-    for( i='h01; i<='h11; ++i ) begin
-        segment_ram_sp ram_segment(
-            .addra (address[10 : 0]),
-            .clka  (clock),
-            .dina  (write_data),
-            .douta (cpu_memory_segments_read[i].data),
-            .ena   (cpu_memory_segments_read[i].enable),
-            .wea   (write)
+    for( i='h00; i<='h08; ++i ) begin
+        ram_segment_sp ram_segment(
+            .address    (address[10 : 0]),
+            .clock      (clock),
+            .write_data (write_data),
+            .read_data  (cpu_memory_segments_read[i].data),
+            .enable     (cpu_memory_segments_read[i].enable),
+            .write      (write)
         );
     end
 
