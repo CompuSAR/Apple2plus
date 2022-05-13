@@ -1,3 +1,6 @@
 [submodule "Apple2plus.srcs/submodules/6502"]
 	path = Apple2plus.srcs/submodules/6502
 	url = https://github.com/CompuSAR/sar6502.git
+[submodule "Apple2plus.srcs/submodules/uart"]
+	path = Apple2plus.srcs/submodules/uart
+	url = https://github.com/CompuSAR/uart.git

@@ -29,6 +29,7 @@ module memory_map(
     output logic[7:0] read_data,
 
     input [9:0]display_addr,
+    input display_enable,
     output logic[7:0] display_data
 );
 
@@ -62,14 +63,28 @@ generate
     genvar i;
 
     for( i='h00; i<='h10; ++i ) begin
-        ram_segment_sp ram_segment(
-            .address    (address[9 : 0]),
-            .clock      (clock),
-            .write_data (write_data),
-            .read_data  (cpu_memory_segments_read[i].data),
-            .enable     (cpu_memory_segments_read[i].enable),
-            .write      (write)
-        );
+        if( i!=1 )
+            ram_segment_sp ram_segment(
+                .address    (address[9 : 0]),
+                .clock      (clock),
+                .write_data (write_data),
+                .read_data  (cpu_memory_segments_read[i].data),
+                .enable     (cpu_memory_segments_read[i].enable),
+                .write      (write)
+            );
+        else
+            ram_segment_dp ram_segment(
+                .address    (address[9 : 0]),
+                .clock      (clock),
+                .write_data (write_data),
+                .read_data  (cpu_memory_segments_read[i].data),
+                .enable     (cpu_memory_segments_read[i].enable),
+                .write      (write),
+
+                .enable_b   (display_enable),
+                .address_b  (display_addr),
+                .read_data_b(display_data)
+            );
     end
 
 endgenerate

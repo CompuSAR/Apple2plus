@@ -37,11 +37,27 @@ module apple2p(
 logic clock1mhz;
 clock_divider#(.Divider(50)) clock1mhz_divider(.clock_in(clock), .clock_out(clock1mhz));
 
+logic [9:0]display_address;
+logic [7:0]display_data;
+logic display_enable;
+display display_controller(
+    .clock(clock),
+
+    .address(display_address),
+    .data(display_data),
+    .enable(display_enable),
+
+    .uart_send(uart_send)
+);
+
 logic [15:0]address_bus;
 logic [7:0]read_data;
 logic [7:0]write_data;
 logic rW;
-memory_map memory_map(.address(address_bus), .clock(!clock1mhz), .write_data(write_data), .write(! rW), .read_data(read_data));
+memory_map memory_map(
+    .address(address_bus), .clock(!clock1mhz), .write_data(write_data), .write(! rW), .read_data(read_data),
+    .display_addr(display_address), .display_enable(display_enable), .display_data(display_data)
+);
 
 cpu8bit main_cpu(
     .phi2(clock1mhz),
