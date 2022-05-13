@@ -3,23 +3,25 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="simulate_a2p_time_impl.wdb" id="1">
+      <db_ref path="simulate_a2p_behav.wdb" id="1">
          <top_modules>
+            <top_module name="bus_sources" />
+            <top_module name="control_signals" />
             <top_module name="glbl" />
             <top_module name="simulate_a2p" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="7.425000 us"></ZoomStartTime>
-      <ZoomEndTime time="23.715001 us"></ZoomEndTime>
-      <Cursor1Time time="21.000000 us"></Cursor1Time>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="32.660001 us"></ZoomEndTime>
+      <Cursor1Time time="10.990000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="187"></NameColumnWidth>
+      <NameColumnWidth column_width="183"></NameColumnWidth>
       <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="6" />
    <wvobject type="logic" fp_name="/simulate_a2p/apple/main_cpu/phi2">
       <obj_property name="ElementShortName">phi2</obj_property>
       <obj_property name="ObjectShortName">phi2</obj_property>
@@ -43,33 +45,5 @@
    <wvobject type="logic" fp_name="/simulate_a2p/apple/reset_switch">
       <obj_property name="ElementShortName">reset_switch</obj_property>
       <obj_property name="ObjectShortName">reset_switch</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulate_a2p/apple/main_cpu/cpu/data_latch_high/D">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">D[7:0]</obj_property>
-      <obj_property name="ObjectShortName">D[7:0]</obj_property>
-      <obj_property name="label">DataLatchHigh</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulate_a2p/apple/main_cpu/cpu/data_latch_low/D">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">D[7:0]</obj_property>
-      <obj_property name="ObjectShortName">D[7:0]</obj_property>
-      <obj_property name="label">DataLatchLow</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulate_a2p/read_data">
-      <obj_property name="ElementShortName">read_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">read_data[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulate_a2p/write_data">
-      <obj_property name="ElementShortName">write_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">write_data[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulate_a2p/write">
-      <obj_property name="ElementShortName">write</obj_property>
-      <obj_property name="ObjectShortName">write</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulate_a2p/mem_enable">
-      <obj_property name="ElementShortName">mem_enable</obj_property>
-      <obj_property name="ObjectShortName">mem_enable</obj_property>
    </wvobject>
 </wave_config>

@@ -21,7 +21,7 @@
 
 
 module ram_segment_sp(
-    input [10:0] address,
+    input [9:0] address,
     input clock,
     input enable,
     output [7:0] read_data,
@@ -29,7 +29,7 @@ module ram_segment_sp(
     input write
 );
 
-logic [7:0]memory[0 : 2047];
+logic [7:0]memory[0 : 1023];
 
 assign read_data = enable ? memory[address] : 8'b0;
 
