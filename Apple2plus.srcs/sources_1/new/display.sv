@@ -43,6 +43,20 @@ localparam string NewLineSequence = "\x0d\x0a";
 logic [$clog2(ClearScreenSequence.len()+1)-1 : 0] cls_counter = 0;
 logic [$clog2(NewLineSequence.len()+1)-1 : 0] nl_counter = NewLineSequence.len();
 
+localparam MaxBytesInTransition = 32;
+localparam NumStates = 2;
+
+localparam string NormalModeCmd = "\x1b[0m";
+localparam string InverseModeCmd = "\x1b[7m";
+
+typedef enum { NormalMode, InverseMode } CharMode;
+CharMode active_state;
+function max(input a, input b);
+    return (a > b) ? a : b;
+endfunction
+
+logic[$clog2( max(NormalModeCmd.len(), InverseModeCmd.len()) + 1)-1 : 0] transition_index;
+
 logic[7:0] uart_data_in;
 logic uart_data_ready;
 logic uart_receive_ready;
@@ -66,42 +80,84 @@ function logic[7:0] translate_data(input logic[7:0] data);
         return {2'b01, data[5:0]};
 endfunction
 
-always_comb begin
-    uart_data_ready = 1;
+function CharMode get_desired_state();
+    if( uart_state!=StateDumpScreen )
+        return active_state;
 
-    if( cls_counter!=ClearScreenSequence.len() ) begin
-        enable = 0;
-        uart_data_in = ClearScreenSequence[cls_counter];
-    end else if( nl_counter!=NewLineSequence.len() ) begin
-        enable = 0;
-        uart_data_in = NewLineSequence[nl_counter];
-    end else if( display_address != 10'h3f7 ) begin
-        enable = 1;
-        uart_data_in = translate_data(data);
-    end else begin
-        enable = 0;
-        uart_data_in = 0;
-        uart_data_ready = 0;
-    end
+    if( data[7] == 1 )
+        return NormalMode;
+    if( data[6] == 0 )
+        return InverseMode;
+
+    // Flashing text
+    return InverseMode;
+endfunction
+
+enum {
+    StateIdle,
+    StateCls,
+    StateNl,
+    StateSwitchMode,
+    StateDumpScreen
+} uart_state = StateCls;
+
+assign uart_data_ready = uart_state != StateIdle;
+assign enable = uart_state != StateIdle;
+
+always_comb begin
+    case(uart_state)
+        StateIdle:              uart_data_in = 0;
+        StateCls:               uart_data_in = ClearScreenSequence[cls_counter];
+        StateNl:                uart_data_in = NewLineSequence[nl_counter];
+        StateSwitchMode:        uart_data_in = active_state==NormalMode ? NormalModeCmd[transition_index] : InverseModeCmd[transition_index];
+        StateDumpScreen:        uart_data_in = translate_data(data);
+    endcase
 end
 
 always_ff@(posedge clock) begin
-    refresh_divider += 1;
+    refresh_divider <= refresh_divider + 1;
 
     if( refresh_divider==CLOCK_REFRESH_DIVIDER-1 ) begin
-        refresh_divider = 1;
-        cls_counter = 0;
-        nl_counter = NewLineSequence.len();
-        display_address = 0;
-    end else if( cls_counter!=ClearScreenSequence.len() ) begin
-        if( uart_receive_ready )
-            cls_counter += 1;
-    end else if( nl_counter!=NewLineSequence.len() ) begin
-        if( uart_receive_ready )
-            nl_counter += 1;
-    end else if( display_address != 10'h3f7 ) begin
-        if( uart_receive_ready )
-            advance_display_address();
+        refresh_divider <= 1;
+        cls_counter <= 0;
+        nl_counter <= NewLineSequence.len();
+        display_address <= 0;
+        uart_state <= StateCls;
+    end else if( uart_receive_ready ) begin
+        case( uart_state )
+            StateIdle: begin end
+            StateCls: begin
+                cls_counter <= cls_counter + 1;
+                if( cls_counter==ClearScreenSequence.len()-1 )
+                    uart_state <= StateDumpScreen;
+            end
+            StateNl: begin
+                nl_counter <= nl_counter + 1;
+                if( nl_counter==NewLineSequence.len()-1 )
+                    uart_state <= StateDumpScreen;
+            end
+            StateSwitchMode: begin
+                transition_index <= transition_index + 1;
+
+                case( active_state )
+                    NormalMode:
+                        if( transition_index==NormalModeCmd.len()-1 )
+                            uart_state <= StateDumpScreen;
+                    InverseMode:
+                        if( transition_index==InverseModeCmd.len()-1 )
+                            uart_state <= StateDumpScreen;
+                endcase
+            end
+            StateDumpScreen: begin
+                advance_display_address();
+            end
+        endcase
+    end
+
+    if( get_desired_state()!=active_state ) begin
+        active_state <= get_desired_state();
+        transition_index<=0;
+        uart_state <= StateSwitchMode;
     end
 end
 
@@ -112,34 +168,38 @@ task advance_display_address();
     * round up to multiple of 128 and go to the next line in the first third.
     */
     if( display_address==10'h3f7 ) begin
-        // End of last line of last third - do nothing.
+        // End of last line of last third
+        uart_state <= StateIdle;
     end else if( display_address[6:0]==39 ) begin
         // End of line in first third
-        nl_counter = 0;
+        nl_counter <= 0;
+        uart_state <= StateNl;
 
         if( display_address==10'h3a7 )
             // End of first third
-            display_address = 40;
+            display_address <= 40;
         else
             // Move a line down
-            display_address += 128 - 39;
+            display_address <= display_address + 128 - 39;
     end else if( display_address[6:0]==39+40 ) begin
         // End of line in second third
-        nl_counter = 0;
+        nl_counter <= 0;
+        uart_state <= StateNl;
 
         if( display_address==10'h3cf )
             // End of second third
-            display_address = 80;
+            display_address <= 80;
         else
             // Move a line down
-            display_address += 128 - 39;
+            display_address <= display_address + 128 - 39;
     end else if( display_address[6:0]==39+80 ) begin
         // End of line in third third
-        nl_counter = 0;
+        nl_counter <= 0;
+        uart_state <= StateNl;
 
-        display_address += 128 - 39;
+        display_address <= display_address + 128 - 39;
     end else begin
-        display_address += 1;
+        display_address <= display_address + 1;
     end
 endtask
 

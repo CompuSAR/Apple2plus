@@ -13,15 +13,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="32.980001 us"></ZoomEndTime>
-      <Cursor1Time time="0.000000 us"></Cursor1Time>
+      <ZoomStartTime time="560.821666 us"></ZoomStartTime>
+      <ZoomEndTime time="643.871667 us"></ZoomEndTime>
+      <Cursor1Time time="630.030000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="167"></NameColumnWidth>
+      <NameColumnWidth column_width="155"></NameColumnWidth>
       <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="15" />
    <wvobject type="logic" fp_name="/simulate_a2p/apple/main_cpu/phi2">
       <obj_property name="ElementShortName">phi2</obj_property>
       <obj_property name="ObjectShortName">phi2</obj_property>
@@ -54,9 +54,21 @@
       <obj_property name="ElementShortName">display_address[9:0]</obj_property>
       <obj_property name="ObjectShortName">display_address[9:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/display_controller/transition_index">
+      <obj_property name="ElementShortName">transition_index[4:0]</obj_property>
+      <obj_property name="ObjectShortName">transition_index[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/display_controller/active_state">
+      <obj_property name="ElementShortName">active_state[0:0]</obj_property>
+      <obj_property name="ObjectShortName">active_state[0:0]</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/simulate_a2p/apple/memory_map/\genblk1[1].genblk1.ram_segment /read_data_b">
       <obj_property name="ElementShortName">read_data_b[7:0]</obj_property>
       <obj_property name="ObjectShortName">read_data_b[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulate_a2p/apple/display_controller/uart_state">
+      <obj_property name="ElementShortName">uart_state[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_state[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/simulate_a2p/apple/display_controller/uart_data_in">
       <obj_property name="ElementShortName">uart_data_in[7:0]</obj_property>
