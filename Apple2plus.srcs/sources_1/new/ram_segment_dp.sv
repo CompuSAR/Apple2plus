@@ -36,7 +36,7 @@ module ram_segment_dp(
 logic [7:0]memory[0 : 1023];
 
 assign read_data = enable ? memory[address] : 8'b0;
-assign read_data_b = enable_b ? memory[address] : 8'b0;
+assign read_data_b = enable_b ? memory[address_b] : 8'b0;
 
 always_ff@(posedge clock) begin
     if( write && enable ) begin
