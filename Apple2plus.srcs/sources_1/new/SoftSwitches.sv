@@ -30,7 +30,12 @@ module SoftSwitches(
     input cpu_clock,
 
     // IO ports
-    input uart_in
+    input uart_in,
+
+    // Debug ports
+    output [7:0] debug_data,
+    output debug_signal1,
+    output debug_signal2
 );
 
 localparam CLOCK_SPEED = 50000000;
@@ -51,6 +56,9 @@ uart_recv#(.ClockDivider(CLOCK_SPEED/DISPLAY_BAUD))
 
 logic[7:0] last_key_pressed = 0;
 logic clear_last_key = 0, already_cleared = 0;
+assign debug_data = last_key_pressed;
+assign debug_signal1 = clear_last_key;
+assign debug_signal2 = already_cleared;
 
 always_ff@(posedge system_clock)
 begin
@@ -68,22 +76,25 @@ end
 // changing. The former is done in on falling edge of the CPU clock, the
 // later via asynchronous logic.
 always_comb begin
-    if( !write ) begin
+    if( enable && !write ) begin
         if( address[7:4]==4'h0 || address[7:4]==4'h1 ) begin
             // Read/clear last key
             read_data = last_key_pressed;
         end else
             read_data = 8'h00;
-    end
+    end else
+        read_data = 8'h00;
 end
 
 always_ff@(negedge cpu_clock)
 begin
     clear_last_key <= 0;
 
-    if( !write ) begin
-        if( address[7:4]==4'h1 ) begin
-            clear_last_key <= 1;
+    if( enable ) begin
+        if( !write ) begin
+            if( address[7:4]==4'h1 ) begin
+                clear_last_key <= 1;
+            end
         end
     end
 end
