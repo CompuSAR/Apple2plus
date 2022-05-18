@@ -57,6 +57,8 @@ endfunction
 
 logic[$clog2( max(NormalModeCmd.len(), InverseModeCmd.len()) + 1)-1 : 0] transition_index;
 
+logic [3:0] frame_counter = 0;
+
 logic[7:0] uart_data_in;
 logic uart_data_ready;
 logic uart_receive_ready;
@@ -90,7 +92,10 @@ function CharMode get_desired_state();
         return InverseMode;
 
     // Flashing text
-    return InverseMode;
+    if( frame_counter<8 )
+        return InverseMode;
+    else
+        return NormalMode;
 endfunction
 
 enum {
@@ -123,6 +128,7 @@ always_ff@(posedge clock) begin
         nl_counter <= NewLineSequence.len();
         display_address <= 0;
         uart_state <= StateCls;
+        frame_counter <= frame_counter + 1;
     end else if( uart_receive_ready ) begin
         case( uart_state )
             StateIdle: begin end
