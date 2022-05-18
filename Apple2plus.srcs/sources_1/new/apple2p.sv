@@ -51,12 +51,14 @@ display display_controller(
 );
 
 logic [15:0]address_bus;
-logic [7:0]read_data;
+logic [7:0]read_data, io_read_data;
 logic [7:0]write_data;
 logic rW;
+logic io_enable;
 memory_map memory_map(
     .address(address_bus), .clock(!clock1mhz), .write_data(write_data), .write(! rW), .read_data(read_data),
-    .display_addr(display_address), .display_enable(display_enable), .display_data(display_data)
+    .display_addr(display_address), .display_enable(display_enable), .display_data(display_data),
+    .io_enable(io_enable), .io_read_data(io_read_data)
 );
 
 cpu8bit main_cpu(
@@ -70,6 +72,17 @@ cpu8bit main_cpu(
     .NMI(1),
     .SO(1),
     .address(address_bus)
+);
+
+SoftSwitches soft_switches(
+    .address(address_bus[7:0]),
+    .write_data(write_data),
+    .read_data(io_read_data),
+    .enable(io_enable),
+    .write(! rW),
+    .system_clock(clock),
+    .cpu_clock(clock1mhz),
+    .uart_in(uart_recv)
 );
 
 assign power_led = 0;

@@ -82,6 +82,14 @@ function logic[7:0] translate_data(input logic[7:0] data);
         return {2'b01, data[5:0]};
 endfunction
 
+enum {
+    StateIdle,
+    StateCls,
+    StateNl,
+    StateSwitchMode,
+    StateDumpScreen
+} uart_state = StateCls;
+
 function CharMode get_desired_state();
     if( uart_state!=StateDumpScreen )
         return active_state;
@@ -97,14 +105,6 @@ function CharMode get_desired_state();
     else
         return NormalMode;
 endfunction
-
-enum {
-    StateIdle,
-    StateCls,
-    StateNl,
-    StateSwitchMode,
-    StateDumpScreen
-} uart_state = StateCls;
 
 assign uart_data_ready = uart_state != StateIdle;
 assign enable = uart_state != StateIdle;

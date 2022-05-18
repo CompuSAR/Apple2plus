@@ -30,7 +30,11 @@ module memory_map(
 
     input [9:0]display_addr,
     input display_enable,
-    output logic[7:0] display_data
+    output logic[7:0] display_data,
+
+    // IO ports
+    output io_enable,
+    input [7:0]io_read_data
 );
 
 interface memory_read_i;
@@ -90,7 +94,8 @@ generate
 endgenerate
 
 // Memory IO region $c000 - $cfff
-assign cpu_memory_segments_read['h30].data = 8'h00;
+assign io_enable = address[15:8]==8'hC0;
+assign cpu_memory_segments_read['h30].data = io_enable ? io_read_data : 8'h00;
 assign cpu_memory_segments_read['h31].data = 8'h00;
 assign cpu_memory_segments_read['h32].data = 8'h00;
 assign cpu_memory_segments_read['h33].data = 8'h00;
