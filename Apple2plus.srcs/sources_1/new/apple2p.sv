@@ -25,6 +25,7 @@ module apple2p(
     output power_led,
     output activity_led,
     input reset_switch,
+    input reset_output_switch,
     output uart_send,
     input uart_recv,
     output speaker,
@@ -40,6 +41,7 @@ clock_divider#(.Divider(50)) clock1mhz_divider(.clock_in(clock), .clock_out(cloc
 logic [9:0]display_address;
 logic [7:0]display_data;
 logic display_enable;
+logic uart_send_raw;
 display display_controller(
     .clock(clock),
 
@@ -47,8 +49,10 @@ display display_controller(
     .data(display_data),
     .enable(display_enable),
 
-    .uart_send(uart_send)
+    .uart_send(uart_send_raw)
 );
+
+assign uart_send = reset_output_switch ? uart_send_raw : 1'b0;
 
 logic [15:0]address_bus;
 logic [7:0]read_data, io_read_data;

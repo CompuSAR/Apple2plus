@@ -18,6 +18,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports speaker]
 # Switches
 set_property PACKAGE_PIN F4 [get_ports reset_switch]
 set_property IOSTANDARD LVCMOS15 [get_ports reset_switch]
+set_property PACKAGE_PIN C5 [get_ports reset_output_switch]
+set_property IOSTANDARD LVCMOS15 [get_ports reset_output_switch]
 
 # LEDs
 set_property PACKAGE_PIN M10 [get_ports activity_led]
