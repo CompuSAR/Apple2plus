@@ -31,6 +31,7 @@ module SoftSwitches(
 
     // IO ports
     input uart_in,
+    output logic speaker = 0,
 
     // Debug ports
     output [7:0] debug_data,
@@ -56,9 +57,6 @@ uart_recv#(.ClockDivider(CLOCK_SPEED/DISPLAY_BAUD))
 
 logic[7:0] last_key_pressed = 0;
 logic clear_last_key = 0, already_cleared = 0;
-assign debug_data = last_key_pressed;
-assign debug_signal1 = clear_last_key;
-assign debug_signal2 = already_cleared;
 
 always_ff@(posedge system_clock)
 begin
@@ -96,6 +94,9 @@ begin
                 clear_last_key <= 1;
             end
         end
+
+        if( address[7:4]==4'h3 )
+            speaker <= ~ speaker;
     end
 end
 

@@ -27,10 +27,10 @@ module apple2p(
     input reset_switch,
     output uart_send,
     input uart_recv,
+    output speaker,
 
     output logic [15:0]debug_addr,
     output logic [7:0]debug_data,
-    output logic debug_clock,
     output logic debug_rw
     );
 
@@ -82,7 +82,8 @@ SoftSwitches soft_switches(
     .write(! rW),
     .system_clock(clock),
     .cpu_clock(clock1mhz),
-    .uart_in(uart_recv)
+    .uart_in(uart_recv),
+    .speaker(speaker)
 );
 
 assign power_led = 0;

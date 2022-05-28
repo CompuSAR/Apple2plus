@@ -11,6 +11,10 @@ set_property IOSTANDARD LVCMOS33 [get_ports uart_recv]
 set_property PACKAGE_PIN N10 [get_ports uart_send]
 set_property IOSTANDARD LVCMOS33 [get_ports uart_send]
 
+# Apple 2 ports
+set_property PACKAGE_PIN B10 [get_ports speaker]
+set_property IOSTANDARD LVCMOS33 [get_ports speaker]
+
 # Switches
 set_property PACKAGE_PIN F4 [get_ports reset_switch]
 set_property IOSTANDARD LVCMOS15 [get_ports reset_switch]
@@ -55,6 +59,5 @@ set_property PACKAGE_PIN F12 [get_ports debug_data[4]]
 set_property PACKAGE_PIN D12 [get_ports debug_data[5]]
 set_property PACKAGE_PIN D14 [get_ports debug_data[6]]
 set_property PACKAGE_PIN B13 [get_ports debug_data[7]]
-set_property PACKAGE_PIN B10 [get_ports debug_clock]
 set_property PACKAGE_PIN A12 [get_ports debug_rw]
 set_property IOSTANDARD LVCMOS33 [get_ports debug*]
