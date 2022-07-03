@@ -31,8 +31,8 @@ module display(
 );
 
 localparam REFRESH_FREQ = 30;
-localparam CLOCK_SPEED = 50000000;
-localparam CLOCK_REFRESH_DIVIDER = CLOCK_SPEED / REFRESH_FREQ;
+localparam CLOCK_SPEED = 16363640;
+localparam CLOCK_REFRESH_DIVIDER = (CLOCK_SPEED + REFRESH_FREQ/2) / REFRESH_FREQ; // Round to nearest integer
 localparam DISPLAY_BAUD = 1000000;
 
 logic [$clog2(CLOCK_REFRESH_DIVIDER)-1 : 0]refresh_divider = 0;
@@ -62,7 +62,7 @@ logic [3:0] frame_counter = 0;
 logic[7:0] uart_data_in;
 logic uart_data_ready;
 logic uart_receive_ready;
-uart_send#(.ClockDivider(CLOCK_SPEED/DISPLAY_BAUD))
+uart_send#(.ClockDivider((CLOCK_SPEED + DISPLAY_BAUD/2) / DISPLAY_BAUD))
     uart(
         .clock(clock),
         .data_in(uart_data_in),

@@ -35,15 +35,19 @@ module apple2p(
     output logic debug_rw
     );
 
-logic clock1mhz;
-clock_divider#(.Divider(50)) clock1mhz_divider(.clock_in(clock), .clock_out(clock1mhz));
+logic clock16mhz, clock1mhz;
+logic clock_stable;
+logic [3:0]divided_clocks;
+assign clock1mhz = divided_clocks[3]; // Divided by 16
+clock_gen1 clock_generator(.clk_in1(clock), .clk_out1(clock16mhz), .locked(clock_stable), .reset(0));
+clock_divider#(.NumBits(4)) clock1mhz_divider(.clock_in(clock16mhz), .clocks_out(divided_clocks));
 
 logic [9:0]display_address;
 logic [7:0]display_data;
 logic display_enable;
 logic uart_send_raw;
 display display_controller(
-    .clock(clock),
+    .clock(clock16mhz),
 
     .address(display_address),
     .data(display_data),
@@ -70,7 +74,7 @@ cpu8bit main_cpu(
     .data_in(read_data),
     .data_out(write_data),
     .rW( rW ),
-    .RES(reset_switch),
+    .RES(reset_switch && clock_stable),
     .rdy(1),
     .IRQ(1),
     .NMI(1),
@@ -84,7 +88,7 @@ SoftSwitches soft_switches(
     .read_data(io_read_data),
     .enable(io_enable),
     .write(! rW),
-    .system_clock(clock),
+    .system_clock(clock16mhz),
     .cpu_clock(clock1mhz),
     .uart_in(uart_recv),
     .speaker(speaker)

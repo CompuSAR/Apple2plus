@@ -20,24 +20,15 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module clock_divider#(parameter int Divider=100)
+module clock_divider#(parameter int NumBits=4)
 (
     input clock_in,
-    output logic clock_out = 0
+    output logic [NumBits-1:0]clocks_out = 0
 );
-
-logic [$clog2(Divider)-1 : 0]divider = 0;
 
 always_ff@(posedge clock_in)
 begin
-    divider <= divider+1;
-
-    if( divider == (Divider-1)/2  )
-        clock_out <= 1;
-    else if( divider==Divider-1 ) begin
-        clock_out <= 0;
-        divider <= 0;
-    end
+    clocks_out <= clocks_out+1;
 end
 
 endmodule

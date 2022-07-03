@@ -39,12 +39,12 @@ module SoftSwitches(
     output debug_signal2
 );
 
-localparam CLOCK_SPEED = 50000000;
+localparam CLOCK_SPEED = 16363640;
 localparam DISPLAY_BAUD = 1000000;
 
 logic[7:0] uart_data;
 logic uart_data_ready;
-uart_recv#(.ClockDivider(CLOCK_SPEED/DISPLAY_BAUD))
+uart_recv#(.ClockDivider( (CLOCK_SPEED + DISPLAY_BAUD/2) / DISPLAY_BAUD) )
     uart(
         .clock(system_clock),
         .input_bit(uart_in),
